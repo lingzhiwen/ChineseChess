@@ -1,0 +1,45 @@
+package com.chinesechess.app.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+val Red50 = Color(0xFFFFEBEE)
+val Red100 = Color(0xFFFFCDD2)
+val Red200 = Color(0xFFEF9A9A)
+val Red300 = Color(0xFFE57373)
+val Red400 = Color(0xFFEF5350)
+val Red500 = Color(0xFFF44336)
+val Red600 = Color(0xFFE53935)
+val Red700 = Color(0xFFD32F2F)
+val Red800 = Color(0xFFC62828)
+val Red900 = Color(0xFFB71C1C)
+
+val Amber50 = Color(0xFFFFF8E1)
+val Amber100 = Color(0xFFFFECB3)
+val Amber200 = Color(0xFFFFE082)
+val Amber300 = Color(0xFFFFD54F)
+val Amber400 = Color(0xFFFFCA28)
+val Amber500 = Color(0xFFFFC107)
+val Amber600 = Color(0xFFFFB300)
+val Amber700 = Color(0xFFFFA000)
+val Amber800 = Color(0xFFFF8F00)
+val Amber900 = Color(0xFFFF6F00)
+
+val Brown50 = Color(0xFFEFEBE9)
+val Brown100 = Color(0xFFD7CCC8)
+val Brown200 = Color(0xFFBCAAA4)
+val Brown300 = Color(0xFFA1887F)
+val Brown400 = Color(0xFF8D6E63)
+val Brown500 = Color(0xFF795548)
+val Brown600 = Color(0xFF6D4C41)
+val Brown700 = Color(0xFF5D4037)
+val Brown800 = Color(0xFF4E342E)
+val Brown900 = Color(0xFF3E2723)
+
+// Chess specific colors
+val ChessBoardLight = Color(0xFFF5E6D3)
+val ChessBoardDark = Color(0xFFD4AF37)
+val ChessRedPiece = Color(0xFFDC143C)
+val ChessBlackPiece = Color(0xFF2F2F2F)
+val ChessHighlight = Color(0xFFFFD700)
+val ChessValidMove = Color(0xFF90EE90)
+val ChessInvalidMove = Color(0xFFFFB6C1)
