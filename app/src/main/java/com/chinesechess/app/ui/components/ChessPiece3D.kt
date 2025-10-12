@@ -15,22 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.chinesechess.app.data.model.ChessPiece
 import com.chinesechess.app.data.model.PieceType
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-
-// FIX: 定义 Compose Color 常量来替换缺失的 R.color 资源，解决 Unresolved reference 错误。
-private val RED_SIDE_LIGHT = Color(0xFFFFCCCC) // 浅红
-private val RED_SIDE_DARK = Color(0xFFCC0000)  // 深红
-private val BLACK_SIDE_LIGHT = Color(0xFFCCCCCC) // 浅灰/黑
-private val BLACK_SIDE_DARK = Color(0xFF444444) // 深灰/黑
-private val CIRCLE_COLOR = Color(0xFFF0E68C) // 卡其色/米黄色
-
-// 用于传递已解析颜色的数据类
-private data class ResolvedColors(
-    val redSideLight: Color,
-    val redSideDark: Color,
-    val blackSideLight: Color,
-    val blackSideDark: Color,
-    val circleColor: Color
-)
+import com.chinesechess.app.ui.theme.*
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
 fun ChessPiece3D(
@@ -41,9 +29,9 @@ fun ChessPiece3D(
     isHighlighted: Boolean = false,
     isLight: Boolean = true
 ) {
-    // 添加选中动画
+    // 选中动画 - 弹性缩放
     val selectedScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.2f else 1f,
+        targetValue = if (isSelected) 1.15f else 1f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -51,20 +39,36 @@ fun ChessPiece3D(
         label = "selectedScale"
     )
 
-    // 添加高亮动画
-    val highlightAlpha by animateFloatAsState(
-        targetValue = if (isHighlighted) 0.8f else 1f,
-        animationSpec = tween(500),
-        label = "highlightAlpha"
+    // 高亮动画 - 脉冲效果
+    val infiniteTransition = rememberInfiniteTransition(label = "pulseTransition")
+    val pulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.6f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAlpha"
     )
 
-    // FIX: 使用定义的常量来初始化颜色，避免 resource lookup 错误
-    val resolvedColors = ResolvedColors(
-        redSideLight = RED_SIDE_LIGHT,
-        redSideDark = RED_SIDE_DARK,
-        blackSideLight = BLACK_SIDE_LIGHT,
-        blackSideDark = BLACK_SIDE_DARK,
-        circleColor = CIRCLE_COLOR
+    // 旋转动画 - 选中时轻微旋转
+    val rotation by animateFloatAsState(
+        targetValue = if (isSelected) 5f else 0f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "rotation"
+    )
+
+    // 浮动动画 - 选中时上浮
+    val elevation by animateFloatAsState(
+        targetValue = if (isSelected) 8f else 0f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "elevation"
     )
 
     Canvas(
@@ -75,9 +79,10 @@ fun ChessPiece3D(
             isSelected = isSelected,
             isHighlighted = isHighlighted,
             selectedScale = selectedScale,
-            highlightAlpha = highlightAlpha,
-            isLight = isLight,
-            resolvedColors = resolvedColors
+            pulseAlpha = if (isHighlighted) pulseAlpha else 1f,
+            rotation = rotation,
+            elevation = elevation,
+            isLight = isLight
         )
     }
 }
@@ -87,215 +92,371 @@ private fun DrawScope.draw3DPiece(
     isSelected: Boolean,
     isHighlighted: Boolean,
     selectedScale: Float,
-    highlightAlpha: Float,
-    isLight: Boolean,
-    resolvedColors: ResolvedColors
+    pulseAlpha: Float,
+    rotation: Float,
+    elevation: Float,
+    isLight: Boolean
 ) {
     val center = size.center
-    val baseRadius = size.minDimension / 2f * 0.8f
+    val baseRadius = size.minDimension / 2f * 0.85f
     val radius = baseRadius * selectedScale
+    
+    // 确定棋子颜色
+    val isRedPiece = piece.isRed()
+    val mainColor = if (isRedPiece) RedPieceMain else BlackPieceMain
+    val lightColor = if (isRedPiece) RedPieceLight else BlackPieceLight
+    val darkColor = if (isRedPiece) RedPieceDark else BlackPieceDark
+    val glowColor = if (isRedPiece) RedPieceGlow else BlackPieceGlow
 
-    // 绘制3D效果
+    // 绘制底部阴影（3D效果）
+    draw3DShadow(
+        center = Offset(center.x + elevation * 0.3f, center.y + elevation * 0.5f),
+        radius = radius * 1.1f,
+        elevation = elevation
+    )
+
+    // 绘制外发光效果（选中或高亮时）
+    if (isSelected || isHighlighted) {
+        drawOuterGlow(
+            center = center,
+            radius = radius,
+            glowColor = if (isSelected) SelectionGlow else ValidMoveIndicator,
+            intensity = pulseAlpha
+        )
+    }
+
+    // 绘制3D圆柱体主体
     draw3DCylinder(
         center = center,
         radius = radius,
-        color = piece.color.color,
+        mainColor = mainColor,
+        lightColor = lightColor,
+        darkColor = darkColor,
         isSelected = isSelected,
         isHighlighted = isHighlighted,
-        highlightAlpha = highlightAlpha
+        pulseAlpha = pulseAlpha
     )
 
-    // 绘制棋子细节
-    drawPieceDetails(
+    // 绘制金属质感边缘
+    drawMetallicRim(
         center = center,
         radius = radius,
-        pieceColor = piece.color.color,
-        isLight = isLight,
-        isRedSide = piece.isRed(),
-        resolvedColors = resolvedColors
+        isRedPiece = isRedPiece
+    )
+
+    // 绘制内圈装饰
+    drawInnerDecoration(
+        center = center,
+        radius = radius * 0.88f,
+        color = if (isRedPiece) Color(0xFFFFD700) else Color(0xFFC0C0C0)
+    )
+
+    // 绘制精细边框
+    drawDetailedBorder(
+        center = center,
+        radius = radius,
+        isSelected = isSelected,
+        isHighlighted = isHighlighted,
+        glowColor = glowColor
     )
 
     // 绘制棋子文字
-    drawPieceText(
+    drawEnhancedPieceText(
         center = center,
+        radius = radius,
         piece = piece,
-        //color = if (piece.isRed()) Color.White else Color.White
+        isRedPiece = isRedPiece
     )
+}
+
+private fun DrawScope.draw3DShadow(
+    center: Offset,
+    radius: Float,
+    elevation: Float
+) {
+    // 多层阴影，营造深度感
+    val shadowLayers = 3
+    for (i in shadowLayers downTo 1) {
+        val shadowRadius = radius * (1f + i * 0.05f)
+        val shadowAlpha = 0.15f / i * (1f + elevation * 0.1f)
+        
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color.Black.copy(alpha = shadowAlpha),
+                    Color.Transparent
+                ),
+                radius = shadowRadius
+            ),
+            radius = shadowRadius,
+            center = center
+        )
+    }
+}
+
+private fun DrawScope.drawOuterGlow(
+    center: Offset,
+    radius: Float,
+    glowColor: Color,
+    intensity: Float
+) {
+    // 外发光效果
+    for (i in 3 downTo 1) {
+        val glowRadius = radius * (1f + i * 0.15f)
+        val glowAlpha = (0.3f / i) * intensity
+        
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    glowColor.copy(alpha = glowAlpha),
+                    glowColor.copy(alpha = glowAlpha * 0.5f),
+                    Color.Transparent
+                ),
+                radius = glowRadius
+            ),
+            radius = glowRadius,
+            center = center
+        )
+    }
 }
 
 private fun DrawScope.draw3DCylinder(
     center: Offset,
     radius: Float,
-    color: Color,
+    mainColor: Color,
+    lightColor: Color,
+    darkColor: Color,
     isSelected: Boolean,
     isHighlighted: Boolean,
-    highlightAlpha: Float
+    pulseAlpha: Float
 ) {
-    val gradient = Brush.radialGradient(
+    // 主体渐变 - 模拟3D圆柱光照
+    val cylinderGradient = Brush.radialGradient(
         colors = listOf(
-            color.copy(alpha = 0.9f * highlightAlpha),
-            color.copy(alpha = 0.7f * highlightAlpha),
-            color.copy(alpha = 0.5f * highlightAlpha)
+            lightColor.copy(alpha = 0.9f * pulseAlpha),
+            mainColor.copy(alpha = 0.95f * pulseAlpha),
+            darkColor.copy(alpha = 0.85f * pulseAlpha),
+            darkColor.copy(alpha = 0.7f * pulseAlpha)
         ),
-        radius = radius
+        center = Offset(center.x - radius * 0.2f, center.y - radius * 0.2f),
+        radius = radius * 1.4f
     )
 
-    // 绘制主体圆柱
+    // 绘制主体
     drawCircle(
-        brush = gradient,
+        brush = cylinderGradient,
         radius = radius,
         center = center
     )
 
-    // 绘制高光效果
-    val highlightRadius = radius * 0.3f
+    // 顶部高光
+    val highlightRadius = radius * 0.4f
     val highlightCenter = Offset(
-        center.x - radius * 0.3f,
-        center.y - radius * 0.3f
+        center.x - radius * 0.25f,
+        center.y - radius * 0.25f
     )
 
     drawCircle(
-        color = Color.White.copy(alpha = 0.3f * highlightAlpha),
+        brush = Brush.radialGradient(
+            colors = listOf(
+                Color.White.copy(alpha = 0.6f * pulseAlpha),
+                Color.White.copy(alpha = 0.3f * pulseAlpha),
+                Color.Transparent
+            ),
+            radius = highlightRadius
+        ),
         radius = highlightRadius,
         center = highlightCenter
     )
 
-    // 绘制阴影
-    val shadowRadius = radius * 0.95f
+    // 底部暗部
+    val shadowRadius = radius * 0.3f
     val shadowCenter = Offset(
-        center.x + radius * 0.1f,
-        center.y + radius * 0.1f
+        center.x + radius * 0.3f,
+        center.y + radius * 0.3f
     )
 
     drawCircle(
-        color = Color.Black.copy(alpha = 0.2f * highlightAlpha),
+        brush = Brush.radialGradient(
+            colors = listOf(
+                darkColor.copy(alpha = 0.4f * pulseAlpha),
+                Color.Transparent
+            ),
+            radius = shadowRadius
+        ),
         radius = shadowRadius,
         center = shadowCenter
     )
-
-    // 绘制边框
-    val borderColor = when {
-        isSelected -> Color(0xFFFFD700) // 金色
-        isHighlighted -> Color(0xFF90EE90) // 绿色
-        else -> Color.Black.copy(alpha = 0.3f)
-    }
-
-    drawCircle(
-        color = Color.Transparent,
-        radius = radius,
-        center = center,
-        style = Stroke(width = if (isSelected) 4f else 2f)
-    )
-
-    // 绘制3D边框效果
-    draw3DBorder(center, radius, borderColor, isSelected)
 }
 
-private fun DrawScope.draw3DBorder(
+private fun DrawScope.drawMetallicRim(
     center: Offset,
     radius: Float,
-    color: Color,
-    isSelected: Boolean
+    isRedPiece: Boolean
 ) {
-    val borderWidth = if (isSelected) 4f else 2f
-    val innerRadius = radius - borderWidth / 2
-
-    // 绘制外圈高光
+    // 金属边缘效果
+    val rimColor = if (isRedPiece) BronzeGold else Color(0xFFC0C0C0)
+    
+    // 外圈
     drawCircle(
-        color = color.copy(alpha = 0.8f),
+        color = rimColor.copy(alpha = 0.7f),
         radius = radius,
         center = center,
-        style = Stroke(width = borderWidth)
+        style = Stroke(width = 2.5f)
     )
-
-    // 绘制内圈阴影
+    
+    // 内圈高光
+    drawCircle(
+        color = rimColor.copy(alpha = 0.4f),
+        radius = radius - 1.5f,
+        center = center,
+        style = Stroke(width = 1f)
+    )
+    
+    // 外圈阴影
     drawCircle(
         color = Color.Black.copy(alpha = 0.3f),
-        radius = innerRadius,
+        radius = radius + 1f,
         center = center,
         style = Stroke(width = 1f)
     )
 }
 
-private fun DrawScope.drawPieceDetails(
+private fun DrawScope.drawInnerDecoration(
     center: Offset,
     radius: Float,
-    pieceColor: Color,
-    isLight: Boolean,
-    isRedSide: Boolean,
-    resolvedColors: ResolvedColors
+    color: Color
 ) {
-    // Draw the piece outline/base background
-
-    // FIX: 移除了可能导致 Val cannot be reassigned 的冗余声明或赋值
-    val backgroundColor = if (isRedSide) {
-        if (isLight) resolvedColors.redSideLight else resolvedColors.redSideDark
-    } else {
-        if (isLight) resolvedColors.blackSideLight else resolvedColors.blackSideDark
-    }
-
-    // 绘制棋子底边（使用 resolvedColors.circleColor）
+    // 内圈装饰圆环
     drawCircle(
-        color = resolvedColors.circleColor,
-        radius = radius * 0.9f,
+        color = color.copy(alpha = 0.5f),
+        radius = radius,
         center = center,
-        style = Stroke(width = 2.dp.toPx())
+        style = Stroke(width = 2.5f)
+    )
+    
+    // 更内层的细环
+    drawCircle(
+        color = color.copy(alpha = 0.3f),
+        radius = radius - 4f,
+        center = center,
+        style = Stroke(width = 1f)
     )
 }
 
-private fun DrawScope.drawPieceText(
+private fun DrawScope.drawDetailedBorder(
     center: Offset,
+    radius: Float,
+    isSelected: Boolean,
+    isHighlighted: Boolean,
+    glowColor: Color
+) {
+    val borderColor = when {
+        isSelected -> SelectionGlow
+        isHighlighted -> ValidMoveIndicator
+        else -> Color.Black.copy(alpha = 0.4f)
+    }
+    
+    val borderWidth = if (isSelected) 3.5f else 2f
+
+    // 主边框
+    drawCircle(
+        color = borderColor,
+        radius = radius,
+        center = center,
+        style = Stroke(width = borderWidth)
+    )
+    
+    // 内侧光晕
+    if (isSelected || isHighlighted) {
+        drawCircle(
+            color = borderColor.copy(alpha = 0.3f),
+            radius = radius - borderWidth,
+            center = center,
+            style = Stroke(width = 1.5f)
+        )
+    }
+}
+
+private fun DrawScope.drawEnhancedPieceText(
+    center: Offset,
+    radius: Float,
     piece: ChessPiece,
-    //color: Color
+    isRedPiece: Boolean
 ) {
     val text = getPieceDisplayText(piece.type, piece.color)
-    val fontSize = size.minDimension * 0.4f
-    val shadowOffset = Offset(1.5f, 1.5f) // 定义阴影偏移量，使阴影更明显
+    val fontSize = radius * 0.9f
+    
+    // 文字颜色
+    val textColor = if (isRedPiece) {
+        android.graphics.Color.parseColor("#FFFFFF") // 白色文字
+    } else {
+        android.graphics.Color.parseColor("#FFFFFF") // 白色文字
+    }
+    
+    val strokeColor = if (isRedPiece) {
+        android.graphics.Color.parseColor("#8B0000") // 深红描边
+    } else {
+        android.graphics.Color.parseColor("#000000") // 黑色描边
+    }
 
-    // 使用 Compose Color 定义棋子文字颜色
-    val redPieceColor = Color(0xFFDC143C) // 红色 (Crimson)
-    val blackPieceColor = Color(0xFF2F2F2F) // 黑色 (Dark Gray)
-
-    // 绘制文字阴影
     drawContext.canvas.nativeCanvas.apply {
-        val paint = android.graphics.Paint().apply {
-            //color = Color.Black // 阴影颜色
+        // 外层粗描边（阴影效果）
+        val shadowPaint = android.graphics.Paint().apply {
+            color = android.graphics.Color.BLACK
             textSize = fontSize
             textAlign = android.graphics.Paint.Align.CENTER
             isAntiAlias = true
+            style = android.graphics.Paint.Style.STROKE
+            strokeWidth = 8f
+            isFakeBoldText = true
+            typeface = android.graphics.Typeface.create(
+                android.graphics.Typeface.SERIF,
+                android.graphics.Typeface.BOLD
+            )
         }
-        drawText(
-            text,
-            center.x + shadowOffset.x,
-            center.y + shadowOffset.y + fontSize / 3,
-            paint
-        )
-    }
-
-    // 绘制主文字
-    drawContext.canvas.nativeCanvas.apply {
-        val paint = android.graphics.Paint().apply {
-            // 使用 Compose Color 变量并转换为 Int (toArgb())
-//            color = if (piece.isRed()) {
-//                redPieceColor // 使用 Compose Color
-//            } else {
-//                blackPieceColor // 使用 Compose Color
-//            }
+        
+        // 中层描边
+        val strokePaint = android.graphics.Paint().apply {
+            color = strokeColor
+            textSize = fontSize
+            textAlign = android.graphics.Paint.Align.CENTER
+            isAntiAlias = true
+            style = android.graphics.Paint.Style.STROKE
+            strokeWidth = 5f
+            isFakeBoldText = true
+            typeface = android.graphics.Typeface.create(
+                android.graphics.Typeface.SERIF,
+                android.graphics.Typeface.BOLD
+            )
+        }
+        
+        // 主文字
+        val fillPaint = android.graphics.Paint().apply {
+            color = textColor
             textSize = fontSize
             textAlign = android.graphics.Paint.Align.CENTER
             isAntiAlias = true
             isFakeBoldText = true
+            typeface = android.graphics.Typeface.create(
+                android.graphics.Typeface.SERIF,
+                android.graphics.Typeface.BOLD
+            )
         }
-        drawText(
-            text,
-            center.x,
-            center.y + fontSize / 3,
-            paint
-        )
+        
+        val textY = center.y + fontSize * 0.35f
+        
+        // 绘制层次：阴影 -> 描边 -> 填充
+        drawText(text, center.x, textY, shadowPaint)
+        drawText(text, center.x, textY, strokePaint)
+        drawText(text, center.x, textY, fillPaint)
     }
 }
 
-private fun getPieceDisplayText(type: PieceType, color: com.chinesechess.app.data.model.PieceColor): String {
+private fun getPieceDisplayText(
+    type: PieceType, 
+    color: com.chinesechess.app.data.model.PieceColor
+): String {
     return when (type) {
         PieceType.GENERAL -> if (color == com.chinesechess.app.data.model.PieceColor.RED) "帅" else "将"
         PieceType.ADVISOR -> "士"

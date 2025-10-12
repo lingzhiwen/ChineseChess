@@ -2,44 +2,64 @@ package com.chinesechess.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Red50 = Color(0xFFFFEBEE)
-val Red100 = Color(0xFFFFCDD2)
-val Red200 = Color(0xFFEF9A9A)
-val Red300 = Color(0xFFE57373)
-val Red400 = Color(0xFFEF5350)
-val Red500 = Color(0xFFF44336)
-val Red600 = Color(0xFFE53935)
-val Red700 = Color(0xFFD32F2F)
-val Red800 = Color(0xFFC62828)
-val Red900 = Color(0xFFB71C1C)
+// 中国传统颜色 - 红色系
+val ChineseRed = Color(0xFFD2232A)          // 中国红
+val VermilionRed = Color(0xFFFF4C3B)        // 朱砂红
+val CrimsonRed = Color(0xFFC91F37)          // 绯红
+val WineRed = Color(0xFF8C2F39)             // 酒红
+val DarkRed = Color(0xFF8B0A1A)             // 暗红
 
-val Amber50 = Color(0xFFFFF8E1)
-val Amber100 = Color(0xFFFFECB3)
-val Amber200 = Color(0xFFFFE082)
-val Amber300 = Color(0xFFFFD54F)
-val Amber400 = Color(0xFFFFCA28)
-val Amber500 = Color(0xFFFFC107)
-val Amber600 = Color(0xFFFFB300)
-val Amber700 = Color(0xFFFFA000)
-val Amber800 = Color(0xFFFF8F00)
-val Amber900 = Color(0xFFFF6F00)
+// 中国传统颜色 - 金色系
+val ImperialGold = Color(0xFFFFD700)        // 帝王金
+val GoldenYellow = Color(0xFFF8B500)        // 金黄
+val BronzeGold = Color(0xFFD4AF37)          // 青铜金
+val AntiqueBrass = Color(0xFFCD7F32)        // 古铜色
 
-val Brown50 = Color(0xFFEFEBE9)
-val Brown100 = Color(0xFFD7CCC8)
-val Brown200 = Color(0xFFBCAAA4)
-val Brown300 = Color(0xFFA1887F)
-val Brown400 = Color(0xFF8D6E63)
-val Brown500 = Color(0xFF795548)
-val Brown600 = Color(0xFF6D4C41)
-val Brown700 = Color(0xFF5D4037)
-val Brown800 = Color(0xFF4E342E)
-val Brown900 = Color(0xFF3E2723)
+// 中国传统颜色 - 木色系
+val RosewoodBrown = Color(0xFF8B4513)       // 红木色
+val WalnutBrown = Color(0xFF5C4033)         // 胡桃木色
+val MahoganyBrown = Color(0xFF6B3410)       // 桃花心木色
+val EbonyBlack = Color(0xFF3A2F2F)          // 乌木色
 
-// Chess specific colors
-val ChessBoardLight = Color(0xFFF5E6D3)
-val ChessBoardDark = Color(0xFFD4AF37)
-val ChessRedPiece = Color(0xFFDC143C)
-val ChessBlackPiece = Color(0xFF2F2F2F)
-val ChessHighlight = Color(0xFFFFD700)
-val ChessValidMove = Color(0xFF90EE90)
-val ChessInvalidMove = Color(0xFFFFB6C1)
+// 象棋专用配色 - 棋盘
+val ChessBoardLight = Color(0xFFFFF8DC)     // 米色 (浅色格子)
+val ChessBoardDark = Color(0xFFD4A574)      // 焦糖色 (深色格子)
+val ChessBoardBorder = Color(0xFF8B4513)    // 红木边框
+val ChessBoardBackground = Color(0xFFFAF0E6) // 亚麻色背景
+val ChessBoardShadow = Color(0x40000000)    // 棋盘阴影
+
+// 象棋专用配色 - 棋子
+val RedPieceMain = Color(0xFFDC143C)        // 红方主色 (深红)
+val RedPieceLight = Color(0xFFFF6B7A)       // 红方亮色
+val RedPieceDark = Color(0xFF8B0000)        // 红方暗色
+val RedPieceGlow = Color(0xFFFF4C3B)        // 红方发光
+
+val BlackPieceMain = Color(0xFF2F2F2F)      // 黑方主色 (深灰黑)
+val BlackPieceLight = Color(0xFF666666)     // 黑方亮色
+val BlackPieceDark = Color(0xFF1A1A1A)      // 黑方暗色
+val BlackPieceGlow = Color(0xFF404040)      // 黑方发光
+
+// 象棋专用配色 - 交互状态
+val SelectionGlow = Color(0xFFFFD700)       // 选中发光 (金色)
+val ValidMoveIndicator = Color(0xFF7FFF7F)  // 有效移动 (亮绿)
+val InvalidMoveIndicator = Color(0xFFFFB6C1) // 无效移动 (粉红)
+val HoverHighlight = Color(0x40FFD700)      // 悬停高亮
+
+// 界面装饰色
+val RiverBlue = Color(0xFF4682B4)           // 楚河汉界 (钢蓝色)
+val PalaceGold = Color(0xFFDAA520)          // 九宫格 (金色)
+val GridLineBlack = Color(0xFF2F2F2F)       // 网格线 (黑色)
+val TextGold = Color(0xFFFFD700)            // 文字金色
+
+// 渐变色定义
+val BackgroundGradientStart = Color(0xFFFFF8DC)  // 背景渐变起始
+val BackgroundGradientEnd = Color(0xFFFFE4B5)    // 背景渐变结束
+
+// Material 3 颜色
+val Primary = ChineseRed
+val Secondary = GoldenYellow
+val Tertiary = RosewoodBrown
+val Surface = Color(0xFFFFFBF6)
+val OnPrimary = Color.White
+val OnSecondary = Color(0xFF2F2F2F)
+val OnSurface = Color(0xFF1C1B1F)

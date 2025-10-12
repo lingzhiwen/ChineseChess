@@ -1,59 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Chinese Chess Colors -->
-    <color name="red_50">#FFEBEE</color>
-    <color name="red_100">#FFCDD2</color>
-    <color name="red_200">#EF9A9A</color>
-    <color name="red_300">#E57373</color>
-    <color name="red_400">#EF5350</color>
-    <color name="red_500">#F44336</color>
-    <color name="red_600">#E53935</color>
-    <color name="red_700">#D32F2F</color>
-    <color name="red_800">#C62828</color>
-    <color name="red_900">#B71C1C</color>
+    <!-- 中国传统颜色 - 红色系 -->
+    <color name="chinese_red">#D2232A</color>
+    <color name="vermilion_red">#FF4C3B</color>
+    <color name="crimson_red">#C91F37</color>
+    <color name="wine_red">#8C2F39</color>
+    <color name="dark_red">#8B0A1A</color>
 
-    <color name="amber_50">#FFF8E1</color>
-    <color name="amber_100">#FFECB3</color>
-    <color name="amber_200">#FFE082</color>
-    <color name="amber_300">#FFD54F</color>
-    <color name="amber_400">#FFCA28</color>
-    <color name="amber_500">#FFC107</color>
-    <color name="amber_600">#FFB300</color>
-    <color name="amber_700">#FFA000</color>
-    <color name="amber_800">#FF8F00</color>
-    <color name="amber_900">#FF6F00</color>
+    <!-- 中国传统颜色 - 金色系 -->
+    <color name="imperial_gold">#FFD700</color>
+    <color name="golden_yellow">#F8B500</color>
+    <color name="bronze_gold">#D4AF37</color>
+    <color name="antique_brass">#CD7F32</color>
 
-    <color name="brown_50">#EFEBE9</color>
-    <color name="brown_100">#D7CCC8</color>
-    <color name="brown_200">#BCAAA4</color>
-    <color name="brown_300">#A1887F</color>
-    <color name="brown_400">#8D6E63</color>
-    <color name="brown_500">#795548</color>
-    <color name="brown_600">#6D4C41</color>
-    <color name="brown_700">#5D4037</color>
-    <color name="brown_800">#4E342E</color>
-    <color name="brown_900">#3E2723</color>
+    <!-- 中国传统颜色 - 木色系 -->
+    <color name="rosewood_brown">#8B4513</color>
+    <color name="walnut_brown">#5C4033</color>
+    <color name="mahogany_brown">#6B3410</color>
+    <color name="ebony_black">#3A2F2F</color>
 
-    <color name="gray_50">#FAFAFA</color>
-    <color name="gray_100">#F5F5F5</color>
-    <color name="gray_200">#EEEEEE</color>
-    <color name="gray_300">#E0E0E0</color>
-    <color name="gray_400">#BDBDBD</color>
-    <color name="gray_500">#9E9E9E</color>
-    <color name="gray_600">#757575</color>
-    <color name="gray_700">#616161</color>
-    <color name="gray_800">#424242</color>
-    <color name="gray_900">#212121</color>
-
+    <!-- 基础颜色 -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     
-    <!-- Chess specific colors -->
-    <color name="chess_board_light">#F5E6D3</color>
-    <color name="chess_board_dark">#D4AF37</color>
-    <color name="chess_red_piece">#DC143C</color>
-    <color name="chess_black_piece">#2F2F2F</color>
-    <color name="chess_highlight">#FFD700</color>
-    <color name="chess_valid_move">#90EE90</color>
-    <color name="chess_invalid_move">#FFB6C1</color>
+    <!-- 象棋专用配色 - 棋盘 -->
+    <color name="chess_board_light">#FFF8DC</color>
+    <color name="chess_board_dark">#D4A574</color>
+    <color name="chess_board_border">#8B4513</color>
+    <color name="chess_board_background">#FAF0E6</color>
+    <color name="chess_board_shadow">#40000000</color>
+
+    <!-- 象棋专用配色 - 棋子 -->
+    <color name="red_piece_main">#DC143C</color>
+    <color name="red_piece_light">#FF6B7A</color>
+    <color name="red_piece_dark">#8B0000</color>
+    <color name="red_piece_glow">#FF4C3B</color>
+
+    <color name="black_piece_main">#2F2F2F</color>
+    <color name="black_piece_light">#666666</color>
+    <color name="black_piece_dark">#1A1A1A</color>
+    <color name="black_piece_glow">#404040</color>
+
+    <!-- 象棋专用配色 - 交互状态 -->
+    <color name="selection_glow">#FFD700</color>
+    <color name="valid_move_indicator">#7FFF7F</color>
+    <color name="invalid_move_indicator">#FFB6C1</color>
+    <color name="hover_highlight">#40FFD700</color>
+
+    <!-- 界面装饰色 -->
+    <color name="river_blue">#4682B4</color>
+    <color name="palace_gold">#DAA520</color>
+    <color name="grid_line_black">#2F2F2F</color>
+    <color name="text_gold">#FFD700</color>
+
+    <!-- 渐变色定义 -->
+    <color name="background_gradient_start">#FFF8DC</color>
+    <color name="background_gradient_end">#FFE4B5</color>
+
+    <!-- Material 3 颜色 -->
+    <color name="primary">#D2232A</color>
+    <color name="secondary">#F8B500</color>
+    <color name="tertiary">#8B4513</color>
+    <color name="surface">#FFFBF6</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#2F2F2F</color>
+    <color name="on_surface">#1C1B1F</color>
 </resources>

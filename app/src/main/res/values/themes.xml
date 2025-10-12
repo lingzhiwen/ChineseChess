@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- 精美的中国象棋主题 -->
     <style name="Base.Theme.ChineseChess" parent="Theme.Material3.DayNight">
-        <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/red_500</item>
+        <!-- 主色调 - 中国红 -->
+        <item name="colorPrimary">@color/chinese_red</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/red_100</item>
-        <item name="colorOnPrimaryContainer">@color/red_900</item>
-        <item name="colorSecondary">@color/amber_500</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="colorSecondaryContainer">@color/amber_100</item>
-        <item name="colorOnSecondaryContainer">@color/amber_900</item>
-        <item name="colorTertiary">@color/brown_500</item>
+        <item name="colorPrimaryContainer">@color/vermilion_red</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+        
+        <!-- 次要色 - 金黄色 -->
+        <item name="colorSecondary">@color/golden_yellow</item>
+        <item name="colorOnSecondary">@color/ebony_black</item>
+        <item name="colorSecondaryContainer">@color/imperial_gold</item>
+        <item name="colorOnSecondaryContainer">@color/ebony_black</item>
+        
+        <!-- 第三色 - 红木色 -->
+        <item name="colorTertiary">@color/rosewood_brown</item>
         <item name="colorOnTertiary">@color/white</item>
-        <item name="colorTertiaryContainer">@color/brown_100</item>
-        <item name="colorOnTertiaryContainer">@color/brown_900</item>
-        <item name="colorError">@color/red_500</item>
+        <item name="colorTertiaryContainer">@color/walnut_brown</item>
+        <item name="colorOnTertiaryContainer">@color/white</item>
+        
+        <!-- 错误色 -->
+        <item name="colorError">@color/dark_red</item>
         <item name="colorOnError">@color/white</item>
-        <item name="colorErrorContainer">@color/red_100</item>
-        <item name="colorOnErrorContainer">@color/red_900</item>
-        <item name="colorSurface">@color/white</item>
-        <item name="colorOnSurface">@color/black</item>
-        <item name="colorSurfaceVariant">@color/gray_100</item>
-        <item name="colorOnSurfaceVariant">@color/gray_700</item>
-        <item name="colorOutline">@color/gray_400</item>
-        <item name="colorOutlineVariant">@color/gray_200</item>
-        <item name="colorSurfaceInverse">@color/black</item>
+        <item name="colorErrorContainer">@color/invalid_move_indicator</item>
+        <item name="colorOnErrorContainer">@color/dark_red</item>
+        
+        <!-- 表面色 -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/background_gradient_start</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface</item>
+        
+        <!-- 边框和轮廓 -->
+        <item name="colorOutline">@color/bronze_gold</item>
+        <item name="colorOutlineVariant">@color/chess_board_dark</item>
+        
+        <!-- 反色 -->
+        <item name="colorSurfaceInverse">@color/ebony_black</item>
         <item name="colorOnSurfaceInverse">@color/white</item>
-        <item name="colorPrimaryInverse">@color/red_200</item>
+        <item name="colorPrimaryInverse">@color/vermilion_red</item>
+        
+        <!-- 背景色 -->
+        <item name="android:colorBackground">@color/background_gradient_start</item>
     </style>
 
     <style name="Theme.ChineseChess" parent="Base.Theme.ChineseChess" />
